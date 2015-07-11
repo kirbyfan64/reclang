@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+use strict; use warnings;
+
+my $clang = $ENV{'RECLANG'} || 'clang'; my @output = `$clang @ARGV 2>&1`;
+my $l = 0; my ($file, $ln) = ("", 0);
+foreach my $line (@output) {
+    if ($l) {
+        $l = 0; if ($line =~ /^$file:/) { redo; }
+        open FILE, '<', $file; my @lines = <FILE>; close FILE;
+        print $lines[$ln-1]; next;
+    }
+    print $line;
+    if (my @m = $line =~ /^([^:]+):(\d+):/) { ($file, $ln) = @m; $l = 1; }
+}
