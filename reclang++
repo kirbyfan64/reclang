@@ -7,7 +7,7 @@ foreach my $line (@output) {
     if ($l) {
         $l = 0; if ($line =~ /^$file:/) { redo; }
         open FILE, '<', $file; my @lines = <FILE>; close FILE;
-        print $lines[$ln-1]; next;
+        print $lines[$ln-1] || $line; next;
     }
     print $line;
     if (my @m = $line =~ /^([^:]+):(\d+):/) { ($file, $ln) = @m; $l = 1; }
